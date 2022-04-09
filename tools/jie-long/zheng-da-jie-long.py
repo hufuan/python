@@ -10,7 +10,9 @@ def process(file):
     global write_xls_lines
     validLine = False
     DIST_1 = '一期'
+    DIST_1_2 = '1期'
     DIST_2 = '二期'
+    DIST_2_2 = '2期'
     with open(file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
         line_seq = 1
@@ -23,9 +25,9 @@ def process(file):
             csv_columns.append(line_no)
             print("Line#: %d, whole line: %s" %  (line_seq, line))
             area = ""
-            if DIST_1 in line_content or ' 1-' in line_content:
+            if DIST_1 in line_content or DIST_1_2 in line_content or ' 1-' in line_content:
                 area = DIST_1
-            elif DIST_2 in line_content or ' 2-' in line_content:
+            elif DIST_2 in line_content or DIST_2_2 in line_content or ' 2-' in line_content:
                 area = DIST_2
             else:
                 print("unknow area")
@@ -33,7 +35,9 @@ def process(file):
             addr1 = ""
             addr2 = ""
             comments = ""
-            m = re.search("(\\d{2,3})(.+)(\\d{3})(.*)", line_content)
+            m = re.search("(\\d{1,3})(\\D+)(\\d{3})\\s*\\u5ba4?\\s*(.*)", line_content)
+            if '联排' in line_content:
+                m = re.search("(\\d{1,3})(\\D+)(\\u8054\\u6392)\\s*\\u5ba4?\\s*(.*)", line_content)
             if m:
                 addr1 = m.group(1)
                 addr2 = m.group(3)
@@ -41,6 +45,9 @@ def process(file):
                 #print("find addr1: %s addr2: %s " % (addr1, addr2))
             else:
                 #print("addr not found in line: %d"% line_seq)
+                m = re.search("(\\d{1,3})\\u53f7(.*)", line_content)
+                addr1 = m.group(1)
+                comments = m.group(2)
                 pass
 
             csv_columns.append(addr1)
@@ -77,7 +84,7 @@ def addSheet1(workbook):
     sheet_name = '统计'
     sheet = workbook.add_sheet(sheet_name)
     sheet.col(0).width = 256 * 20
-    sheet.col(1).width = 256 * 10
+    sheet.col(1).width = 256 * 15
     sheet.col(2).width = 256 * 10
     sheet.col(3).width = 256 * 10
     sheet.col(4).width = 256 * 40
