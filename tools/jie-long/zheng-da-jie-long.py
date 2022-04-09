@@ -9,8 +9,8 @@ write_xls_lines = []
 def process(file):
     global write_xls_lines
     validLine = False
-    
-
+    DIST_1 = '一期'
+    DIST_2 = '二期'
     with open(file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
         line_seq = 1
@@ -19,13 +19,21 @@ def process(file):
             csv_columns = []
             line_no = line.split('.')[0]
             line_content = line[(line.index(".") +1):].strip()
-            #print(f'line_content = {line_content}')
+            print(f'line_content = {line_content}')
             csv_columns.append(line_no)
             print("Line#: %d, whole line: %s" %  (line_seq, line))
+            area = ""
+            if DIST_1 in line_content or ' 1-' in line_content:
+                area = DIST_1
+            elif DIST_2 in line_content or ' 2-' in line_content:
+                area = DIST_2
+            else:
+                print("unknow area")
+            csv_columns.append(area)
             addr1 = ""
             addr2 = ""
             comments = ""
-            m = re.search("(\\d{2})(.+)(\\d{3})(.+)", line_content)
+            m = re.search("(\\d{2,3})(.+)(\\d{3})(.*)", line_content)
             if m:
                 addr1 = m.group(1)
                 addr2 = m.group(3)
@@ -47,7 +55,7 @@ def process(file):
                 #print("phone num not found in %s" % line_seq)
                 pass
             csv_columns.append(phone_num)
-            print(f"\tParse result,No: {line_no} building#: {addr1}, room: {addr2}, phone num: {phone_num}, comments: {comments}")
+            print(f"\tParse result,No: {line_no} area: {area} building#: {addr1}, room: {addr2}, phone num: {phone_num}, comments: {comments}")
             write_xls_lines.append(csv_columns)
             line_seq += 1
         print("Done!")
@@ -71,9 +79,10 @@ def addSheet1(workbook):
     sheet.col(0).width = 256 * 20
     sheet.col(1).width = 256 * 10
     sheet.col(2).width = 256 * 10
-    sheet.col(3).width = 256 * 40
-    sheet.col(4).width = 256 * 20
-    tableHead = ['接龙序号','楼号', '门牌号', '内容', '手机']
+    sheet.col(3).width = 256 * 10
+    sheet.col(4).width = 256 * 40
+    sheet.col(5).width = 256 * 20
+    tableHead = ['接龙序号','一期/二期', '楼号', '门牌号', '内容', '手机']
     rowIndex = 0
     WriteSheetRow(sheet, tableHead, rowIndex, True)
     rowIndex = rowIndex + 1
