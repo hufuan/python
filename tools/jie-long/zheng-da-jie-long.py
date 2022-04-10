@@ -35,9 +35,9 @@ def process(file):
             addr1 = ""
             addr2 = ""
             comments = ""
-            m = re.search("\\D*(\\d{1,3})(\\D+)(\\d{3})\\s*\\u5ba4?\\s*(.*)", line_content)
+            m = re.search("\\D*(\\d{1,3})(\\D+)(\\d{3,4})\\s*\\u5ba4?\\s*(.*)", line_content)
             if '期' in line_content:
-                m = re.search("\\u671f\\D*(\\d{1,3})(\\D+)(\\d{3})\\s*\\u5ba4?\\s*(.*)", line_content)
+                m = re.search("\\u671f\\D*(\\d{1,3})(\\D+)(\\d{3,4})\\s*\\u5ba4?\\s*(.*)", line_content)
             if '联排' in line_content:
                 m = re.search("\\u671f?\\D*(\\d{1,3})(\\D+)(\\u8054\\u6392)\\s*\\u5ba4?\\s*(.*)", line_content)
                 print("handling lian pai")
