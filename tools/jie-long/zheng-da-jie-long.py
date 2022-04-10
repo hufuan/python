@@ -35,9 +35,12 @@ def process(file):
             addr1 = ""
             addr2 = ""
             comments = ""
-            m = re.search("(\\d{1,3})(\\D+)(\\d{3})\\s*\\u5ba4?\\s*(.*)", line_content)
+            m = re.search("\\D*(\\d{1,3})(\\D+)(\\d{3})\\s*\\u5ba4?\\s*(.*)", line_content)
+            if '期' in line_content:
+                m = re.search("\\u671f\\D*(\\d{1,3})(\\D+)(\\d{3})\\s*\\u5ba4?\\s*(.*)", line_content)
             if '联排' in line_content:
-                m = re.search("(\\d{1,3})(\\D+)(\\u8054\\u6392)\\s*\\u5ba4?\\s*(.*)", line_content)
+                m = re.search("\\u671f?\\D*(\\d{1,3})(\\D+)(\\u8054\\u6392)\\s*\\u5ba4?\\s*(.*)", line_content)
+                print("handling lian pai")
             if m:
                 addr1 = m.group(1)
                 addr2 = m.group(3)
@@ -45,7 +48,7 @@ def process(file):
                 #print("find addr1: %s addr2: %s " % (addr1, addr2))
             else:
                 #print("addr not found in line: %d"% line_seq)
-                m = re.search("(\\d{1,3})\\u53f7(.*)", line_content)
+                m = re.search("\\u671f?\\D*(\\d{1,3})\\u53f7(.*)", line_content)
                 addr1 = m.group(1)
                 comments = m.group(2)
                 pass

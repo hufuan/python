@@ -25,7 +25,7 @@ def process(file):
             addr1 = ""
             addr2 = ""
             comments = ""
-            m = re.search("(\\d{2})(.+)(\\d{3})(.+)", line_content)
+            m = re.search("\\D*(\\d{2})(.+)(\\d{3})(.+)", line_content)
             if m:
                 addr1 = m.group(1)
                 addr2 = m.group(3)
