@@ -1,7 +1,10 @@
 import re
-import os
+import os,sys
 import csv
 write_csv_lines = []
+input_file = ""
+output_file = ""
+
 def process(file):
     global write_csv_lines
     tableHead = ['no','area', 'builder', 'room', 'content', 'mobile']
@@ -73,17 +76,28 @@ def process(file):
             line_seq += 1
         print("Done!")
 
-def write_to_csv():
-    outputFileName = "ouput.csv"
+def write_to_csv(outputFileName):
     csvfile=open(outputFileName, 'w',encoding='utf-8-sig')
     csvWriter = csv.writer(csvfile, lineterminator='\n')
     for line in write_csv_lines:
         csvWriter.writerow(line)
     csvfile.close()
-file = "t1.txt"
-if os.path.exists(file):
-    process(file)
-else:
-    print("File: %r is not found" %(file))
 
-write_to_csv()
+def hand_input():
+    global  input_file
+    global  output_file
+    para_len = len(sys.argv)
+    if para_len != 3:
+        print("Error: Usage: ./exe [input file] [output file]")
+        return
+    input_file = sys.argv[1]
+    output_file = sys.argv[2]
+    if os.path.exists(input_file):
+        process(input_file)
+    else:
+        print("File: %r is not found" % (input_file))
+        return
+    write_to_csv(output_file)
+
+if __name__ == "__main__":
+     hand_input()
