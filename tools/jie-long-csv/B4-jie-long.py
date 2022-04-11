@@ -1,16 +1,11 @@
 import re
 import os
-import xlwt
-excel_filepath_prefix='输出整理文档'
-import datetime
-"""
-"""
-write_xls_lines = []
+import csv
+write_csv_lines = []
 def process(file):
-    global write_xls_lines
-    validLine = False
-    
-
+    global write_csv_lines
+    tableHead = ['no', 'building', 'room', 'content', 'mobile']
+    write_csv_lines.append(tableHead)
     with open(file, 'r', encoding='utf-8') as f:
         lines = f.readlines()
         line_seq = 1
@@ -48,51 +43,21 @@ def process(file):
                 pass
             csv_columns.append(phone_num)
             print(f"\tParse result,No: {line_no} building#: {addr1}, room: {addr2}, phone num: {phone_num}, comments: {comments}")
-            write_xls_lines.append(csv_columns)
+            write_csv_lines.append(csv_columns)
             line_seq += 1
         print("Done!")
 
-def WriteSheetRow(sheet,rowValueList,rowIndex,isHeader):
-    i = 0
-    #style = xlwt.easyxf('font: bold 1') #bold font
-    styleHeadr = xlwt.easyxf('font: name Calibri, bold on, height 280, color blue;align: wrap on, horiz right') #font
-    styleBody = xlwt.easyxf('font: name Calibri, height 280, color black;align: wrap on, horiz right')  # font
-    for svalue in rowValueList:
-        #strValue = unicode(str(svalue),'utf-8')
-        if isHeader:
-            sheet.write(rowIndex,i,svalue,styleHeadr)
-        else:
-            sheet.write(rowIndex,i,svalue, styleBody)
-        i = i + 1
-
-def addSheet1(workbook):
-    sheet_name = '统计'
-    sheet = workbook.add_sheet(sheet_name)
-    sheet.col(0).width = 256 * 20
-    sheet.col(1).width = 256 * 10
-    sheet.col(2).width = 256 * 10
-    sheet.col(3).width = 256 * 40
-    sheet.col(4).width = 256 * 20
-    tableHead = ['接龙序号','楼号', '门牌号', '内容', '手机']
-    rowIndex = 0
-    WriteSheetRow(sheet, tableHead, rowIndex, True)
-    rowIndex = rowIndex + 1
-
-    for line_columns in write_xls_lines:
-        WriteSheetRow(sheet, line_columns, rowIndex, False)
-        rowIndex = rowIndex + 1
-    pass
-def write_to_xsl():
-    workbook = xlwt.Workbook(encoding='utf-8')
-    addSheet1(workbook)
-    timeStr = datetime.datetime.now().strftime('%Y-%m-%d %H-%M-%S')
-    file_name = excel_filepath_prefix + " " +  timeStr + ".xls"
-    workbook.save(file_name)
-
-file = "输入信息.txt"
+def write_to_csv():
+    outputFileName = "ouput.csv"
+    csvfile=open(outputFileName, 'w',encoding='utf-8-sig')
+    csvWriter = csv.writer(csvfile, lineterminator='\n')
+    for line in write_csv_lines:
+        csvWriter.writerow(line)
+    csvfile.close()
+file = "t1.txt"
 if os.path.exists(file):
     process(file)
 else:
     print("File: %r is not found" %(file))
 
-write_to_xsl()
+write_to_csv()
