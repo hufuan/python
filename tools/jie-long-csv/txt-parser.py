@@ -40,7 +40,7 @@ def process(file):
             if '期' in line_content:
                 m = re.search("\\u671f\\D*(\\d{1,3})(\\D+)(\\d{3,4})\\s*\\u5ba4?\\s*(.*)", line_content)
             else:
-                m = re.search("\\D*(\\d{2})(.+)(\\d{3})(.+)", line_content)
+                m = re.search("\\D*(\\d{1,3})(\\D+)(\\d{3,4})\\s*\\u5ba4?\\s*(.*)", line_content)
             if '联排' in line_content:
                 m = re.search("\\u671f?\\D*(\\d{1,3})(\\D+)(\\u8054\\u6392)\\s*\\u5ba4?\\s*(.*)", line_content)
                 print("handling lian pai")
@@ -80,7 +80,7 @@ def write_to_csv():
     for line in write_csv_lines:
         csvWriter.writerow(line)
     csvfile.close()
-file = "t2.txt"
+file = "t1.txt"
 if os.path.exists(file):
     process(file)
 else:
